@@ -1,4 +1,4 @@
-import type { Content } from "@/engine/engine";
+import type { ActionId, Content } from "@/engine/engine";
 
 export const content: Content = {
   skills: {
@@ -29,3 +29,6 @@ export const content: Content = {
     },
   },
 };
+
+/** The Action a newly named Duck starts performing straight away. */
+export const startingActionId: ActionId = "forage-duckweed";
