@@ -5,9 +5,9 @@ import { content } from "@/content/content";
 import type { OfflineProgressSummary } from "@/engine/engine";
 import { MAX_NAME_LENGTH } from "@/server/save-limits";
 import { createDuck, loadDuck, syncDuck, type SaveResponse } from "./save-client";
-import { ForagingView } from "./ForagingView";
+import { GameShell, Masthead } from "./GameShell";
 import { isWorthSummarising, ReturnSummary } from "./ReturnSummary";
-import styles from "./game.module.css";
+import styles from "./shell.module.css";
 
 const SYNC_INTERVAL_MS = 15_000;
 
@@ -15,6 +15,8 @@ const SYNC_INTERVAL_MS = 15_000;
 interface ClientSave {
   save: SaveResponse;
   clockOffsetMs: number;
+  /** Device time when this save arrived from the server. */
+  savedAt: number;
 }
 
 type Screen =
@@ -26,6 +28,7 @@ type Screen =
 const toClientSave = (save: SaveResponse): ClientSave => ({
   save,
   clockOffsetMs: save.serverNow - Date.now(),
+  savedAt: Date.now(),
 });
 
 export function Game() {
@@ -69,35 +72,51 @@ export function Game() {
     setScreen({ kind: "playing", current: toClientSave(save) });
   }, []);
 
+  if (screen.kind === "playing" && !returnSummary) {
+    return (
+      <GameShell
+        name={screen.current.save.name}
+        state={screen.current.save.state}
+        clockOffsetMs={screen.current.clockOffsetMs}
+        savedAt={screen.current.savedAt}
+        content={content}
+      />
+    );
+  }
+
   return (
-    <main className={styles.screen}>
-      {screen.kind === "loading" && <p className={styles.muted}>Waking the Duck…</p>}
-      {screen.kind === "naming" && <NameDuckForm onNamed={onNamed} />}
-      {screen.kind === "playing" && returnSummary && (
-        <ReturnSummary
-          name={screen.current.save.name}
-          summary={returnSummary}
-          content={content}
-          onContinue={() => setReturnSummary(null)}
-        />
-      )}
-      {screen.kind === "playing" && !returnSummary && (
-        <ForagingView
-          name={screen.current.save.name}
-          state={screen.current.save.state}
-          clockOffsetMs={screen.current.clockOffsetMs}
-          content={content}
-        />
-      )}
-      {screen.kind === "error" && (
-        <div className={styles.card} role="alert">
-          <p>{screen.message}</p>
-          <button className={styles.button} onClick={() => location.reload()}>
-            Try again
-          </button>
-        </div>
-      )}
-    </main>
+    <div className={styles.shell}>
+      <Masthead />
+      <main className={styles.single}>
+        {screen.kind === "loading" && (
+          <p className={styles.waiting} role="status">
+            Waking the Duck…
+          </p>
+        )}
+        {screen.kind === "naming" && <NameDuckForm onNamed={onNamed} />}
+        {screen.kind === "playing" && returnSummary && (
+          <ReturnSummary
+            name={screen.current.save.name}
+            summary={returnSummary}
+            content={content}
+            onContinue={() => setReturnSummary(null)}
+          />
+        )}
+        {screen.kind === "error" && (
+          <section className={styles.form} role="alert" aria-labelledby="error-title">
+            <h1 id="error-title" className={styles.band}>
+              Something went wrong
+            </h1>
+            <div className={styles.formBody}>
+              <p>{screen.message}</p>
+              <button className={styles.primary} onClick={() => location.reload()}>
+                Try again
+              </button>
+            </div>
+          </section>
+        )}
+      </main>
+    </div>
   );
 }
 
@@ -119,31 +138,38 @@ function NameDuckForm({ onNamed }: { onNamed: (save: SaveResponse) => void }) {
   };
 
   return (
-    <form className={styles.card} onSubmit={submit}>
-      <h1 className={styles.title}>Duckshire</h1>
-      <p className={styles.muted}>A duck has wandered up to you. It would like a name.</p>
-      <label className={styles.label} htmlFor="duck-name">
-        Your Duck&apos;s name
-      </label>
-      <input
-        id="duck-name"
-        className={styles.input}
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-        maxLength={MAX_NAME_LENGTH}
-        placeholder="Sir Quacksalot"
-        autoComplete="off"
-        autoFocus
-        required
-      />
-      {error && (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
-      )}
-      <button className={styles.button} disabled={submitting || name.trim() === ""}>
-        {submitting ? "Quacking…" : "Start foraging"}
-      </button>
+    <form className={styles.form} onSubmit={submit} aria-labelledby="entry-title">
+      <h1 id="entry-title" className={styles.band}>
+        Name your Duck
+      </h1>
+      <div className={styles.formBody}>
+        <p className={styles.lede}>A duck has wandered up to you. It would like a name.</p>
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="duck-name">
+            Duck
+          </label>
+          <input
+            id="duck-name"
+            className={styles.input}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            maxLength={MAX_NAME_LENGTH}
+            placeholder="Sir Quacksalot"
+            autoComplete="off"
+            autoFocus
+            required
+            aria-describedby={error ? "duck-name-error" : undefined}
+          />
+        </div>
+        {error && (
+          <p id="duck-name-error" className={styles.error} role="alert">
+            {error}
+          </p>
+        )}
+        <button className={styles.primary} disabled={submitting || name.trim() === ""}>
+          {submitting ? "Starting…" : "Start foraging"}
+        </button>
+      </div>
     </form>
   );
 }

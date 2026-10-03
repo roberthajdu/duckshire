@@ -1,0 +1,677 @@
+/* The game shell, set like a show schedule. Tokens live in app/globals.css. */
+
+.shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* ---------- Masthead ---------- */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.mastheadInner {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+}
+
+.wordmark {
+  font-family: var(--font-name);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.region,
+.fieldLabel,
+.band,
+.ruleHeading,
+.rates dt,
+.cycleLabel,
+.skillState,
+.recordCycles,
+.primary {
+  font-stretch: 75%;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.region {
+  color: var(--on-ink-soft);
+}
+
+.mastheadLive {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.mastheadAction {
+  overflow: hidden;
+  color: var(--on-ink-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mastheadTime {
+  flex: none;
+  white-space: nowrap;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.cycleLine {
+  height: 4px;
+  background: color-mix(in srgb, var(--on-ink) 14%, transparent);
+}
+
+.cycleLine > div {
+  height: 100%;
+  background: var(--first);
+  transform-origin: left center;
+}
+
+/* ---------- Board: the three columns of the schedule ---------- */
+
+.board {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "entry" "skills" "inventory";
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.entry {
+  grid-area: entry;
+  min-width: 0;
+  padding: 20px 16px 28px;
+}
+
+.panel {
+  min-width: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.panel[aria-labelledby="skills-title"] {
+  grid-area: skills;
+}
+
+.panel[aria-labelledby="inventory-title"] {
+  grid-area: inventory;
+}
+
+@media (min-width: 40rem) {
+  .board {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "entry entry" "skills inventory";
+  }
+
+  .entry {
+    padding: 28px 24px 32px;
+  }
+
+  .panel[aria-labelledby="inventory-title"] {
+    border-left: 1px solid var(--ink);
+  }
+}
+
+@media (min-width: 64rem) {
+  .board {
+    grid-template-columns: 16rem minmax(0, 1fr) 20rem;
+    grid-template-areas: "skills entry inventory";
+    border-inline: 1px solid var(--ink);
+  }
+
+  .panel {
+    border-top: none;
+  }
+
+  .entry {
+    border-left: 1px solid var(--ink);
+    padding: 28px 32px 40px;
+  }
+
+  /* Masthead and footer text align with the board's band text. */
+  .mastheadInner {
+    padding-inline: 12px;
+  }
+}
+
+/* ---------- Reversed heading bands ---------- */
+
+.band {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 7px 12px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--size-text);
+  line-height: 1.3;
+}
+
+.bandMeta {
+  color: var(--on-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.ruleHeading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: var(--size-text);
+}
+
+.ruleHeading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--ink);
+}
+
+/* ---------- The entry: Duck, Action, Cycle ---------- */
+
+.fieldLabel {
+  color: var(--ink-soft);
+}
+
+.entryDuck {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 3px double var(--ink);
+}
+
+.duckName,
+.actionName {
+  font-family: var(--font-name);
+  font-size: var(--size-name);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.duckName {
+  font-weight: 700;
+}
+
+.actionName {
+  font-weight: 600;
+}
+
+.entryIdle {
+  padding: 24px 0;
+  color: var(--ink-soft);
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 22px;
+}
+
+.actionHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.actionHead .classNumber {
+  margin-top: 0.3em;
+}
+
+.actionSkill {
+  color: var(--ink-soft);
+}
+
+.flavour {
+  max-width: 60ch;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.classNumber {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1.5px solid var(--ink);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.actionHead .classNumber,
+.skill[data-active] .classNumber {
+  border-color: var(--first);
+  background: var(--first);
+  color: var(--card);
+}
+
+.cycle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cycleLabel {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cycleLabel .figure {
+  font-stretch: 100%;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.cycleTrack {
+  position: relative;
+  height: 18px;
+  border: 1.5px solid var(--ink);
+  background:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px) 0 0 / calc(100% / var(--seconds, 1))
+      100%,
+    var(--card);
+  overflow: hidden;
+}
+
+.cycleFill {
+  height: 100%;
+  background: var(--first);
+  transform-origin: left center;
+}
+
+.rates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.rates > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px 12px 0;
+}
+
+.rates > div + div {
+  padding-left: 12px;
+  border-left: 1px solid var(--rule);
+}
+
+.rates dt {
+  color: var(--ink-soft);
+}
+
+.rates dd {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quantities sit on the neutral ramp; colour arrives only with a fresh stamp. */
+.xpTotal {
+  color: var(--second);
+}
+
+.figure {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 39.99rem) {
+  .rates {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rates > div,
+  .rates > div + div {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 9px 0;
+    border-left: none;
+  }
+
+  .rates > div + div {
+    border-top: 1px solid var(--rule);
+  }
+
+  .rates dd {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
+/* ---------- Recent Cycles: each completed Cycle stamps a line ---------- */
+
+.record {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.recordEmpty {
+  color: var(--ink-soft);
+}
+
+.recordList {
+  list-style: none;
+}
+
+.recordRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 16px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.recordRow time {
+  color: var(--ink-soft);
+}
+
+.recordRow:first-child {
+  animation: stamp 700ms var(--ease-out);
+}
+
+.recordRow:first-child .gainText {
+  color: var(--commended);
+}
+
+.recordRow:first-child .xpText {
+  color: var(--second);
+}
+
+.recordGains {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.recordCycles {
+  color: var(--ink-soft);
+}
+
+/* ---------- Skills ---------- */
+
+.skills {
+  list-style: none;
+}
+
+.skill {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  min-height: 48px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.skill[data-active] {
+  background: var(--card-inset);
+}
+
+.skillName {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.skillState {
+  color: var(--first);
+}
+
+.skillXp {
+  font-weight: 700;
+}
+
+/* Column heads and an end rule, as a printed schedule sets its tables. */
+.tableHead {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+  column-gap: 12px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--ink);
+  color: var(--ink-soft);
+  font-stretch: 75%;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lotHead {
+  grid-template-columns: 3.5ch minmax(0, 1fr) auto;
+}
+
+.skill:last-child,
+.lot:last-child {
+  border-bottom-color: var(--ink);
+}
+
+/* ---------- Inventory: a ruled table of lots ---------- */
+
+.lots {
+  list-style: none;
+}
+
+.lot {
+  border-bottom: 1px solid var(--rule);
+}
+
+.lotRow {
+  display: grid;
+  grid-template-columns: 3.5ch minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.lotRow:focus-visible {
+  outline-offset: -2px;
+}
+
+.lotRow[aria-expanded="true"] {
+  background: var(--card-inset);
+}
+
+@media (hover: hover) {
+  .lotRow:hover {
+    background: var(--card-inset);
+  }
+}
+
+.lotNumber {
+  color: var(--ink-soft);
+}
+
+.lotName {
+  font-weight: 700;
+}
+
+.lotNote {
+  padding: 0 12px 12px calc(12px + 3.5ch + 12px);
+  background: var(--card-inset);
+  color: var(--ink-soft);
+}
+
+.panelEmpty {
+  padding: 12px;
+  color: var(--ink-soft);
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  border-top: 1px solid var(--ink);
+  color: var(--ink-soft);
+}
+
+.footer p {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 12px 16px max(14px, env(safe-area-inset-bottom));
+}
+
+@media (min-width: 64rem) {
+  .footer p {
+    padding-inline: 12px;
+  }
+}
+
+/* ---------- Single-sheet screens: naming, loading, errors, the return summary ---------- */
+
+.single {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(24px, 8vh, 72px) 16px max(32px, env(safe-area-inset-bottom));
+}
+
+.waiting {
+  color: var(--ink-soft);
+}
+
+.form {
+  width: 100%;
+  max-width: 30rem;
+  border: 1.5px solid var(--ink);
+}
+
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 20px 24px;
+}
+
+.lede {
+  color: var(--ink-soft);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input {
+  min-height: 48px;
+  padding: 4px 0;
+  border: none;
+  border-bottom: 2px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--font-name);
+  font-size: 1.625rem; /* well over 16px, so iOS never zooms the field */
+  font-weight: 600;
+}
+
+.input::placeholder {
+  color: var(--ink-faint);
+}
+
+.input:focus-visible {
+  outline: none;
+  box-shadow: 0 1px 0 var(--ink);
+}
+
+.error {
+  color: var(--first);
+  font-weight: 700;
+}
+
+.primary {
+  min-height: 48px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--size-text);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 150ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .primary:hover:not(:disabled) {
+    background: var(--first);
+  }
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.primary:disabled {
+  background: var(--rule);
+  color: var(--ink-soft);
+  cursor: default;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes stamp {
+  from {
+    background: color-mix(in srgb, var(--commended) 22%, transparent);
+    clip-path: inset(0 100% 0 0);
+  }
+  40% {
+    background: color-mix(in srgb, var(--commended) 22%, transparent);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recordRow:first-child {
+    animation: none;
+  }
+}
+
+/* On phones the masthead keeps only the Cycle figure; the entry below names the Action. */
+@media (max-width: 39.99rem) {
+  .mastheadAction {
+    display: none;
+  }
+}

@@ -21,21 +21,34 @@ interface ReturnSummaryProps {
   onContinue: () => void;
 }
 
-/** A shareable postcard of what the Duck got up to while the player was away. */
+/** A shareable results slip of what the Duck got up to while the player was away. */
 export function ReturnSummary({ name, summary, content, onContinue }: ReturnSummaryProps) {
   const capped = summary.awayMs > OFFLINE_PROGRESS_CAP_MS;
+  const workedMs = Math.min(summary.awayMs, OFFLINE_PROGRESS_CAP_MS);
 
   return (
-    <article className={styles.postcard} aria-labelledby="return-title">
+    <article className={styles.slip} aria-labelledby="return-title">
+      <h1 id="return-title" className={styles.band}>
+        While you were away
+      </h1>
+
       <header className={styles.top}>
-        <p className={styles.kicker}>While you were away</p>
-        <h1 id="return-title" className={styles.name}>
-          {name}
-        </h1>
-        <p className={styles.away}>
-          <span className={styles.awayLabel}>kept busy for</span>
-          <strong className={styles.awayTime}>{formatDuration(summary.awayMs)}</strong>
-        </p>
+        <p className={styles.name}>{name}</p>
+        <dl className={styles.facts}>
+          <div>
+            <dt className={styles.label}>Kept busy for</dt>
+            <dd className={styles.worked}>
+              {formatDuration(workedMs)}
+              {capped && <span className={styles.stamp}>Limit reached</span>}
+            </dd>
+          </div>
+          {capped && (
+            <div>
+              <dt className={styles.label}>Away for</dt>
+              <dd className={styles.away}>{formatDuration(summary.awayMs)}</dd>
+            </div>
+          )}
+        </dl>
         {capped && (
           <p className={styles.note}>
             Worked the first {formatDuration(OFFLINE_PROGRESS_CAP_MS)}, then napped with one eye
@@ -51,25 +64,22 @@ export function ReturnSummary({ name, summary, content, onContinue }: ReturnSumm
         <ul className={styles.gains}>
           {Object.entries(summary.items).map(([itemId, quantity]) => (
             <li key={itemId} className={styles.gain}>
-              <span className={styles.gainAmount}>+{quantity.toLocaleString()}</span>
+              <span className={styles.itemAmount}>+{quantity.toLocaleString()}</span>
               <span>{content.items[itemId]?.name ?? itemId}</span>
             </li>
           ))}
           {Object.entries(summary.experience).map(([skillId, experience]) => (
             <li key={skillId} className={styles.gain}>
-              <span className={styles.gainAmount}>+{experience.toLocaleString()}</span>
-              <span>{content.skills[skillId]?.name ?? skillId} experience</span>
+              <span className={styles.xpAmount}>+{experience.toLocaleString()}</span>
+              <span>{content.skills[skillId]?.name ?? skillId} XP</span>
             </li>
           ))}
         </ul>
       </section>
 
       <footer className={styles.bottom}>
-        <span className={styles.stamp} aria-hidden="true">
-          Duckshire
-        </span>
         <button className={styles.continue} onClick={onContinue} autoFocus>
-          Back to the pond
+          Continue
         </button>
       </footer>
     </article>
