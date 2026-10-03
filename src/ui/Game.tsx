@@ -2,9 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { content } from "@/content/content";
+import type { OfflineProgressSummary } from "@/engine/engine";
 import { MAX_NAME_LENGTH } from "@/server/save-limits";
 import { createDuck, loadDuck, syncDuck, type SaveResponse } from "./save-client";
 import { ForagingView } from "./ForagingView";
+import { isWorthSummarising, ReturnSummary } from "./ReturnSummary";
 import styles from "./game.module.css";
 
 const SYNC_INTERVAL_MS = 15_000;
@@ -28,10 +30,15 @@ const toClientSave = (save: SaveResponse): ClientSave => ({
 
 export function Game() {
   const [screen, setScreen] = useState<Screen>({ kind: "loading" });
+  const [returnSummary, setReturnSummary] = useState<OfflineProgressSummary | null>(null);
 
   useEffect(() => {
     loadDuck()
-      .then((save) => setScreen(save ? { kind: "playing", current: toClientSave(save) } : { kind: "naming" }))
+      .then((save) => {
+        if (!save) return setScreen({ kind: "naming" });
+        if (isWorthSummarising(save.offlineProgress)) setReturnSummary(save.offlineProgress);
+        setScreen({ kind: "playing", current: toClientSave(save) });
+      })
       .catch((error: Error) => setScreen({ kind: "error", message: error.message }));
   }, []);
 
@@ -66,7 +73,15 @@ export function Game() {
     <main className={styles.screen}>
       {screen.kind === "loading" && <p className={styles.muted}>Waking the Duck…</p>}
       {screen.kind === "naming" && <NameDuckForm onNamed={onNamed} />}
-      {screen.kind === "playing" && (
+      {screen.kind === "playing" && returnSummary && (
+        <ReturnSummary
+          name={screen.current.save.name}
+          summary={returnSummary}
+          content={content}
+          onContinue={() => setReturnSummary(null)}
+        />
+      )}
+      {screen.kind === "playing" && !returnSummary && (
         <ForagingView
           name={screen.current.save.name}
           state={screen.current.save.state}

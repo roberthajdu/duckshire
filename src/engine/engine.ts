@@ -48,9 +48,13 @@ export interface GameState {
   currentAction: CurrentAction | null;
 }
 
+/** The longest stretch of unobserved time a single call grants Cycles for. */
+export const OFFLINE_PROGRESS_CAP_MS = 12 * 60 * 60_000;
+
 /**
  * The Game Engine: applies every whole Cycle of the current Action completed
- * by `now`. Live play and Offline Progress both call this.
+ * by `now`. Live play and Offline Progress both call this. Time beyond
+ * {@link OFFLINE_PROGRESS_CAP_MS} grants nothing, and the next Cycle starts at `now`.
  */
 export function advanceGame(
   state: GameState,
@@ -62,7 +66,9 @@ export function advanceGame(
 
   const action = content.actions[currentAction.actionId];
   if (!action) throw new Error(`Unknown Action "${currentAction.actionId}"`);
-  const cycles = Math.floor((now - currentAction.cycleStartedAt) / action.cycleMs);
+  const elapsedMs = now - currentAction.cycleStartedAt;
+  const capped = elapsedMs > OFFLINE_PROGRESS_CAP_MS;
+  const cycles = Math.floor(Math.min(elapsedMs, OFFLINE_PROGRESS_CAP_MS) / action.cycleMs);
   if (cycles <= 0) return state;
 
   const inventory = { ...duck.inventory };
@@ -80,7 +86,54 @@ export function advanceGame(
     duck: { ...duck, skills, inventory },
     currentAction: {
       ...currentAction,
-      cycleStartedAt: currentAction.cycleStartedAt + cycles * action.cycleMs,
+      cycleStartedAt: capped ? now : currentAction.cycleStartedAt + cycles * action.cycleMs,
     },
   };
+}
+
+/** What the Duck earned while the player was away, for the return summary. */
+export interface OfflineProgressSummary {
+  /** Time since the in-progress Cycle began, which may exceed the cap. */
+  awayMs: number;
+  items: Record<ItemId, number>;
+  experience: Record<SkillId, number>;
+}
+
+/**
+ * Offline Progress: advances a returning Duck with the same {@link advanceGame}
+ * as live play and summarises what it gained. No summary without a current Action.
+ */
+export function applyOfflineProgress(
+  state: GameState,
+  content: Content,
+  now: number,
+): { state: GameState; summary: OfflineProgressSummary | null } {
+  if (!state.currentAction) return { state, summary: null };
+
+  const after = advanceGame(state, content, now);
+  return {
+    state: after,
+    summary: {
+      awayMs: Math.max(0, now - state.currentAction.cycleStartedAt),
+      items: gains(state.duck.inventory, after.duck.inventory),
+      experience: gains(
+        mapValues(state.duck.skills, (skill) => skill.experience),
+        mapValues(after.duck.skills, (skill) => skill.experience),
+      ),
+    },
+  };
+}
+
+/** The positive differences between two tallies, keyed by id. */
+function gains(before: Record<string, number>, after: Record<string, number>) {
+  const gained: Record<string, number> = {};
+  for (const [id, amount] of Object.entries(after)) {
+    const difference = amount - (before[id] ?? 0);
+    if (difference > 0) gained[id] = difference;
+  }
+  return gained;
+}
+
+function mapValues<T>(record: Record<string, T>, toNumber: (value: T) => number) {
+  return Object.fromEntries(Object.entries(record).map(([id, value]) => [id, toNumber(value)]));
 }

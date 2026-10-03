@@ -1,10 +1,12 @@
-import type { GameState } from "@/engine/engine";
+import type { GameState, OfflineProgressSummary } from "@/engine/engine";
 
 /** A Duck's save as the save API returns it. */
 export interface SaveResponse {
   name: string;
   state: GameState;
   serverNow: number;
+  /** What the Duck earned while away; only a load returns it. */
+  offlineProgress?: OfflineProgressSummary | null;
 }
 
 async function readSave(response: Response): Promise<SaveResponse | null> {
