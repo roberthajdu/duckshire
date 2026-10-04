@@ -168,4 +168,44 @@ describe("save API", () => {
     expect(await synced.json()).toMatchObject({ state: expectedState, serverNow: T0 + 7_500 });
     expect(await loaded.json()).toMatchObject({ state: expectedState });
   });
+
+  it("applies Offline Progress when a returning Duck loads, and persists it", async () => {
+    const { api, advanceClock } = setup();
+    const cookie = cookieFrom(await api.createDuck(createRequest({ name: "Sir Quacksalot" })));
+
+    advanceClock(2 * 60 * 60_000 + 1_000);
+    const loaded = await api.getDuck(withCookie("http://test/api/duck", cookie));
+    const reloaded = await api.getDuck(withCookie("http://test/api/duck", cookie));
+
+    const expectedState = {
+      duck: { skills: { foraging: { experience: 24_000 } }, inventory: { reed: 2_400 } },
+      currentAction: { actionId: "pick-reeds", cycleStartedAt: T0 + 2 * 60 * 60_000 },
+    };
+    expect(loaded.status).toBe(200);
+    expect(await loaded.json()).toMatchObject({
+      state: expectedState,
+      offlineProgress: {
+        awayMs: 2 * 60 * 60_000 + 1_000,
+        items: { reed: 2_400 },
+        experience: { foraging: 24_000 },
+      },
+    });
+    expect(await reloaded.json()).toMatchObject({
+      state: expectedState,
+      offlineProgress: { awayMs: 1_000, items: {}, experience: {} },
+    });
+  });
+
+  it("grants a returning Duck nothing for time beyond 12 hours", async () => {
+    const { api, advanceClock } = setup();
+    const cookie = cookieFrom(await api.createDuck(createRequest({ name: "Sir Quacksalot" })));
+
+    advanceClock(3 * 24 * 60 * 60_000);
+    const loaded = await api.getDuck(withCookie("http://test/api/duck", cookie));
+
+    expect(await loaded.json()).toMatchObject({
+      state: { duck: { inventory: { reed: 14_400 } } },
+      offlineProgress: { awayMs: 3 * 24 * 60 * 60_000, items: { reed: 14_400 } },
+    });
+  });
 });

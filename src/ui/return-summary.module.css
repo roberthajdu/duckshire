@@ -1,0 +1,199 @@
+/* The return summary as a show results slip. Tokens live in app/globals.css. */
+
+.slip {
+  width: 100%;
+  max-width: 28rem;
+  border: 1.5px solid var(--ink);
+  background: var(--card);
+  box-shadow: 0 10px 28px -12px rgb(22 35 27 / 0.35);
+  animation: arrive 600ms var(--ease-out);
+}
+
+.band,
+.label,
+.haulTitle,
+.stamp,
+.continue {
+  font-stretch: 75%;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.band {
+  padding: 7px 12px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--size-text);
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 20px 18px;
+  border-bottom: 3px double var(--ink);
+}
+
+/* Label-and-value rows, ruled like the haul below. */
+.facts > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 16px;
+  padding: 8px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.facts dd {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+/* On phones the label sits above its value so neither wraps. */
+@media (max-width: 39.99rem) {
+  .facts > div {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2px;
+  }
+}
+
+.label {
+  color: var(--ink-soft);
+}
+
+.name {
+  font-family: var(--font-name);
+  font-size: var(--size-name);
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.worked {
+  font-family: var(--font-name);
+  font-size: clamp(2.75rem, 2rem + 4vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: lining-nums proportional-nums;
+}
+
+.away {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  max-width: 36ch;
+  color: var(--ink-soft);
+}
+
+.haul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 20px 8px;
+}
+
+.haulTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--size-text);
+}
+
+.haulTitle::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--ink);
+}
+
+.gains {
+  list-style: none;
+}
+
+.gain {
+  display: grid;
+  grid-template-columns: minmax(6ch, auto) minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 700;
+}
+
+.gain:last-child {
+  border-bottom: none;
+}
+
+.itemAmount,
+.xpAmount {
+  font-family: var(--font-name);
+  font-size: 1.5rem;
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1.1;
+}
+
+.itemAmount {
+  color: var(--commended);
+}
+
+.xpAmount {
+  color: var(--second);
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 12px 20px 20px;
+}
+
+/* The cap is a state, so it is stamped onto the figure it limits. */
+.stamp {
+  align-self: center;
+  padding: 2px 7px;
+  border: 1.5px solid var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--size-text);
+  line-height: 1.3;
+}
+
+.continue {
+  min-height: 48px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--size-text);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 150ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .continue:hover {
+    background: var(--first);
+  }
+}
+
+.continue:active {
+  transform: translateY(1px);
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slip {
+    animation: none;
+  }
+}

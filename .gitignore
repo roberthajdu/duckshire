@@ -42,3 +42,13 @@ next-env.d.ts
 
 # local save database
 /data
+
+# agent skills installed from skills-lock.json
+/.agents/
+/.claude/skills/
+/.claude/settings.local.json
+
+# impeccable session artifacts (screenshots, decision page logs, hook cache)
+/.impeccable/review/
+/.impeccable/questions/
+/.impeccable/hook.cache.json

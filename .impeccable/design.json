@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-04T00:00:00Z",
+  "title": "Design System: Duckshire",
+  "extensions": {
+    "colorMeta": {
+      "first": { "role": "primary", "displayName": "First-Prize Red", "canonical": "oklch(53.8% 0.200 23.6)", "tonalRamp": ["#3f0000", "#660000", "#8c0000", "#b3001d", "#de3b41", "#ff6565", "#ff8d8a", "#ffdad5"] },
+      "second": { "role": "secondary", "displayName": "Second-Prize Blue", "canonical": "oklch(44.3% 0.142 260.3)", "tonalRamp": ["#000045", "#001866", "#083989", "#2a5aac", "#4c7ed4", "#6fa4fd", "#94cbff", "#d9f0ff"] },
+      "commended": { "role": "tertiary", "displayName": "Commended Green", "canonical": "oklch(52.5% 0.127 146.1)", "tonalRamp": ["#001500", "#003200", "#00500a", "#1f702d", "#479450", "#6cba73", "#92e198", "#daf8db"] },
+      "third": { "role": "tertiary", "displayName": "Third-Prize Yellow (reserved for Feathers)", "canonical": "oklch(83.4% 0.158 89.0)", "tonalRamp": ["#230000", "#411600", "#613500", "#815400", "#a67800", "#cc9d00", "#f4c433", "#ffedbf"] },
+      "ink": { "role": "neutral", "displayName": "Show Ink", "canonical": "oklch(24.1% 0.024 157.1)", "tonalRamp": ["#040e07", "#1a281f", "#36443b", "#536258", "#75857b", "#99a99f", "#bfcfc4", "#eaf0ec"] },
+      "ink-soft": { "role": "neutral", "displayName": "Pencilled Ink", "canonical": "oklch(45.1% 0.026 157.8)", "tonalRamp": ["#030e07", "#19281f", "#35443b", "#526258", "#74857a", "#98aa9e", "#bed0c4", "#e9f1ec"] },
+      "ink-faint": { "role": "neutral", "displayName": "Faint Ink", "canonical": "oklch(54.2% 0.021 155.4)", "tonalRamp": ["#050e08", "#1c2720", "#37433b", "#556159", "#77847b", "#9ba99f", "#c0cfc5", "#eaf0ec"] },
+      "card": { "role": "neutral", "displayName": "Card Stock", "canonical": "oklch(96.8% 0.007 115.7)", "tonalRamp": ["#0b0c08", "#242421", "#3f403c", "#5d5e5a", "#80817c", "#a4a5a0", "#cacbc6", "#eeefed"] },
+      "card-inset": { "role": "neutral", "displayName": "Card Inset", "canonical": "oklch(93.3% 0.011 118.0)", "tonalRamp": ["#0b0c07", "#23251f", "#3f413a", "#5d5e58", "#7f817a", "#a4a69e", "#caccc4", "#eeefec"] },
+      "rule": { "role": "neutral", "displayName": "Hairline", "canonical": "oklch(83.1% 0.019 124.0)", "tonalRamp": ["#090c05", "#22261c", "#3e4237", "#5b6054", "#7e8276", "#a2a79a", "#c8cdc0", "#edefea"] },
+      "on-ink": { "role": "neutral", "displayName": "On Ink", "canonical": "oklch(96.8% 0.007 115.7)", "tonalRamp": ["#0b0c08", "#242421", "#3f403c", "#5d5e5a", "#80817c", "#a4a5a0", "#cacbc6", "#eeefed"] },
+      "on-ink-soft": { "role": "neutral", "displayName": "On Ink Soft", "canonical": "oklch(76.6% 0.020 152.7)", "tonalRamp": ["#050e07", "#1d271f", "#38433b", "#556158", "#78847a", "#9ca89f", "#c1cfc4", "#ebf0ec"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The worked duration on the return summary; one per sheet." },
+      "headline": { "displayName": "Headline", "purpose": "The Duck's name (700) and the Action's name (600)." },
+      "wordmark": { "displayName": "Wordmark", "purpose": "\"Duckshire\" in the masthead only." },
+      "figure": { "displayName": "Figure", "purpose": "Gain amounts in the return-summary haul; lining tabular slab numerals." },
+      "body": { "displayName": "Body", "purpose": "Everything read, at the one text size." },
+      "label": { "displayName": "Label", "purpose": "Condensed caps at 75% width: bands, table heads, field and rate labels, states, buttons, stamps." }
+    },
+    "shadows": [
+      { "name": "slip-lift", "value": "0 10px 28px -12px rgb(22 35 27 / 0.35)", "purpose": "The return-summary results slip only; nothing on the board casts a shadow." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The single easing for state transitions and the stamp." },
+      { "name": "stamp", "value": "700ms ease-out; wipe in from left (clip-path) on a 22% commended wash, settling by 40%", "purpose": "Signature motion: the newest Recent Cycles row is stamped in. Disabled under prefers-reduced-motion." },
+      { "name": "button-fill", "value": "background-color 150ms ease-out", "purpose": "Ink button turns first-prize red on pointer hover." }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "40rem" },
+      { "name": "desktop", "value": "64rem" },
+      { "name": "board-max", "value": "80rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The ink button for the one action on a sheet (name the Duck, back to the pond).",
+      "html": "<button class=\"ds-btn-primary\">Continue</button>",
+      "css": ".ds-btn-primary { min-height: 48px; padding: 0 22px; border: none; border-radius: 0; background: var(--ink, #16231b); color: var(--on-ink, #f4f5f0); font-family: var(--font-text, Archivo, 'Helvetica Neue', Arial, sans-serif); font-size: 0.9375rem; font-stretch: 75%; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background-color 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { background: var(--first, #c8202f); } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 2px solid var(--ink, #16231b); outline-offset: 2px; } .ds-btn-primary:disabled { background: var(--rule, #c5cabd); color: var(--ink-soft, #4a5a50); cursor: default; }"
+    },
+    {
+      "name": "Name Input",
+      "kind": "input",
+      "refersTo": "input-name",
+      "description": "Boxless slab-set field on an ink underline, with a condensed-caps label above.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-name\">Name</label><input id=\"ds-name\" class=\"ds-input-name\" placeholder=\"Sir Quacksalot\"></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 4px; max-width: 26rem; } .ds-field-label { color: var(--ink-soft, #4a5a50); font-family: var(--font-text, Archivo, sans-serif); font-size: 0.9375rem; font-stretch: 75%; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; } .ds-input-name { min-height: 48px; padding: 4px 0; border: none; border-bottom: 2px solid var(--ink, #16231b); border-radius: 0; background: transparent; color: var(--ink, #16231b); font-family: var(--font-name, 'Zilla Slab', Georgia, serif); font-size: 1.625rem; font-weight: 600; } .ds-input-name::placeholder { color: var(--ink-faint, #66736a); } .ds-input-name:focus-visible { outline: none; box-shadow: 0 1px 0 var(--ink, #16231b); }"
+    },
+    {
+      "name": "Masthead",
+      "kind": "nav",
+      "refersTo": "heading-band",
+      "description": "Sticky reversed masthead with wordmark, region, live Cycle figure, and the Cycle line along its foot.",
+      "html": "<header class=\"ds-masthead\"><div class=\"ds-masthead-inner\"><span class=\"ds-wordmark\">Duckshire</span><span class=\"ds-region\">Pondhaven</span><span class=\"ds-masthead-time\">0.7s / 3.0s</span></div><div class=\"ds-cycle-line\"><div style=\"transform: scaleX(0.25)\"></div></div></header>",
+      "css": ".ds-masthead { background: var(--ink, #16231b); color: var(--on-ink, #f4f5f0); font-family: var(--font-text, Archivo, sans-serif); font-size: 0.9375rem; } .ds-masthead-inner { display: flex; align-items: baseline; gap: 14px; padding: 10px 16px; } .ds-wordmark { font-family: var(--font-name, 'Zilla Slab', Georgia, serif); font-size: 1.375rem; font-weight: 700; line-height: 1; } .ds-region { color: var(--on-ink-soft, #aab7ad); font-stretch: 75%; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; } .ds-masthead-time { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-cycle-line { height: 4px; background: color-mix(in srgb, var(--on-ink, #f4f5f0) 14%, transparent); } .ds-cycle-line > div { height: 100%; background: var(--first, #c8202f); transform-origin: left center; }"
+    },
+    {
+      "name": "Ruled Table (Skills)",
+      "kind": "card",
+      "refersTo": "table-row",
+      "description": "Heading band, pencilled head row, 48px hairline-ruled rows, ink end rule; active row on card inset with a red class number.",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-band\">Skills</h2><ol class=\"ds-table\"><li class=\"ds-thead\"><span>No.</span><span>Skill</span><span>XP</span></li><li class=\"ds-row ds-row-active\"><span class=\"ds-class-no ds-class-no-active\">1</span><span class=\"ds-name\">Foraging<span class=\"ds-state\">Training</span></span><span class=\"ds-qty\">4,160</span></li><li class=\"ds-row\"><span class=\"ds-class-no\">2</span><span class=\"ds-name\">Fishing</span><span class=\"ds-qty\">0</span></li></ol></section>",
+      "css": ".ds-panel { width: 16rem; background: var(--card, #f4f5f0); color: var(--ink, #16231b); font-family: var(--font-text, Archivo, sans-serif); font-size: 0.9375rem; line-height: 1.45; } .ds-band, .ds-thead, .ds-state { font-stretch: 75%; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; } .ds-band { margin: 0; padding: 7px 12px; background: var(--ink, #16231b); color: var(--on-ink, #f4f5f0); font-size: 0.9375rem; line-height: 1.3; } .ds-table { list-style: none; margin: 0; padding: 0; } .ds-thead { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr) auto; column-gap: 12px; padding: 6px 12px; border-bottom: 1px solid var(--ink, #16231b); color: var(--ink-soft, #4a5a50); } .ds-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: 12px; min-height: 48px; padding: 8px 12px; border-bottom: 1px solid var(--rule, #c5cabd); } .ds-row:last-child { border-bottom-color: var(--ink, #16231b); } .ds-row-active { background: var(--card-inset, #e8eae2); } .ds-name { display: flex; flex-direction: column; font-weight: 700; line-height: 1.25; } .ds-state { color: var(--first, #c8202f); } .ds-qty { font-weight: 700; font-variant-numeric: tabular-nums; } .ds-class-no { display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 1.5px solid var(--ink, #16231b); font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; } .ds-class-no-active { border-color: var(--first, #c8202f); background: var(--first, #c8202f); color: var(--card, #f4f5f0); }"
+    },
+    {
+      "name": "Cycle Track",
+      "kind": "custom",
+      "refersTo": "class-number-active",
+      "description": "Label row with tabular figure over an 18px ink-boxed track marked per second and filled in first-prize red.",
+      "html": "<div class=\"ds-cycle\"><div class=\"ds-cycle-label\"><span>Cycle</span><span class=\"ds-fig\">0.7s / 3.0s</span></div><div class=\"ds-track\" style=\"--seconds: 3\"><div class=\"ds-fill\" style=\"transform: scaleX(0.25)\"></div></div></div>",
+      "css": ".ds-cycle { display: flex; flex-direction: column; gap: 6px; max-width: 40rem; color: var(--ink, #16231b); font-family: var(--font-text, Archivo, sans-serif); font-size: 0.9375rem; } .ds-cycle-label { display: flex; justify-content: space-between; font-stretch: 75%; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; } .ds-fig { font-stretch: 100%; letter-spacing: 0; text-transform: none; font-variant-numeric: tabular-nums; } .ds-track { height: 18px; border: 1.5px solid var(--ink, #16231b); background: linear-gradient(to right, var(--rule, #c5cabd) 1px, transparent 1px) 0 0 / calc(100% / var(--seconds, 1)) 100%, var(--card, #f4f5f0); overflow: hidden; } .ds-fill { height: 100%; background: var(--first, #c8202f); transform-origin: left center; }"
+    },
+    {
+      "name": "Recent Cycles",
+      "kind": "custom",
+      "refersTo": "table-row",
+      "description": "Signature judging record: a rule heading over hairline rows; the newest row is stamped in with green gains and blue XP.",
+      "html": "<div class=\"ds-record\"><h2 class=\"ds-rule-heading\">Recent Cycles</h2><ol class=\"ds-record-list\"><li class=\"ds-record-row\"><time>01:03:14</time><span class=\"ds-gains\"><span class=\"ds-gain\">+1 Duckweed</span><span class=\"ds-xp\">+10 Foraging XP</span></span></li><li class=\"ds-record-row\"><time>01:03:11</time><span class=\"ds-gains\"><span class=\"ds-gain\">+1 Duckweed</span><span class=\"ds-xp\">+10 Foraging XP</span></span></li></ol></div>",
+      "css": ".ds-record { display: flex; flex-direction: column; gap: 8px; max-width: 40rem; color: var(--ink, #16231b); font-family: var(--font-text, Archivo, sans-serif); font-size: 0.9375rem; } .ds-rule-heading { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 0.9375rem; font-stretch: 75%; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; } .ds-rule-heading::after { content: ''; flex: 1; height: 1px; background: var(--ink, #16231b); } .ds-record-list { list-style: none; margin: 0; padding: 0; } .ds-record-row { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; column-gap: 16px; padding: 7px 0; border-bottom: 1px solid var(--rule, #c5cabd); } .ds-record-row time { color: var(--ink-soft, #4a5a50); font-variant-numeric: tabular-nums; } .ds-gains { display: flex; flex-wrap: wrap; column-gap: 14px; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-record-row:first-child { animation: ds-stamp 700ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-record-row:first-child .ds-gain { color: var(--commended, #2f7d3a); } .ds-record-row:first-child .ds-xp { color: var(--second, #1f4fa0); } @keyframes ds-stamp { from { background: color-mix(in srgb, var(--commended, #2f7d3a) 22%, transparent); clip-path: inset(0 100% 0 0); } 40% { background: color-mix(in srgb, var(--commended, #2f7d3a) 22%, transparent); clip-path: inset(0 0 0 0); } } @media (prefers-reduced-motion: reduce) { .ds-record-row:first-child { animation: none; } }"
+    },
+    {
+      "name": "Results Slip",
+      "kind": "card",
+      "refersTo": "state-stamp",
+      "description": "The return summary: ink-boxed sheet, band, slab name and display duration, state stamp, ruled haul in slab figures.",
+      "html": "<article class=\"ds-slip\"><h1 class=\"ds-slip-band\">While you were away</h1><div class=\"ds-slip-top\"><p class=\"ds-slip-name\">Sir Quacksalot</p><div class=\"ds-slip-fact\"><span class=\"ds-slip-label\">Kept busy for</span><span class=\"ds-slip-worked\">12h<span class=\"ds-stamp\">Limit reached</span></span></div></div><div class=\"ds-slip-haul\"><div class=\"ds-slip-gain\"><span class=\"ds-amt ds-amt-item\">+14,400</span><span>Duckweed</span></div><div class=\"ds-slip-gain\"><span class=\"ds-amt ds-amt-xp\">+144,000</span><span>Foraging XP</span></div></div></article>",
+      "css": ".ds-slip { width: 100%; max-width: 28rem; border: 1.5px solid var(--ink, #16231b); background: var(--card, #f4f5f0); color: var(--ink, #16231b); box-shadow: 0 10px 28px -12px rgb(22 35 27 / 0.35); font-family: var(--font-text, Archivo, sans-serif); font-size: 0.9375rem; line-height: 1.45; } .ds-slip-band, .ds-slip-label, .ds-stamp { font-stretch: 75%; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; } .ds-slip-band { margin: 0; padding: 7px 12px; background: var(--ink, #16231b); color: var(--on-ink, #f4f5f0); font-size: 0.9375rem; } .ds-slip-top { display: flex; flex-direction: column; gap: 14px; padding: 20px 20px 18px; border-bottom: 3px double var(--ink, #16231b); } .ds-slip-name { margin: 0; font-family: var(--font-name, 'Zilla Slab', Georgia, serif); font-size: clamp(1.625rem, 1.25rem + 1.5vw, 2.375rem); font-weight: 700; line-height: 1.1; } .ds-slip-fact { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: 16px; padding: 8px 0; border-top: 1px solid var(--rule, #c5cabd); } .ds-slip-label { color: var(--ink-soft, #4a5a50); } .ds-slip-worked { display: flex; align-items: baseline; gap: 10px; font-family: var(--font-name, 'Zilla Slab', Georgia, serif); font-size: clamp(2.75rem, 2rem + 4vw, 3.75rem); font-weight: 700; line-height: 1; font-variant-numeric: lining-nums proportional-nums; } .ds-stamp { align-self: center; padding: 2px 7px; border: 1.5px solid var(--ink, #16231b); font-family: var(--font-text, Archivo, sans-serif); font-size: 0.9375rem; line-height: 1.3; } .ds-slip-haul { padding: 16px 20px 20px; } .ds-slip-gain { display: grid; grid-template-columns: minmax(6ch, auto) minmax(0, 1fr); align-items: baseline; column-gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--rule, #c5cabd); font-weight: 700; } .ds-slip-gain:last-child { border-bottom: none; } .ds-amt { font-family: var(--font-name, 'Zilla Slab', Georgia, serif); font-size: 1.5rem; line-height: 1.1; font-variant-numeric: lining-nums tabular-nums; } .ds-amt-item { color: var(--commended, #2f7d3a); } .ds-amt-xp { color: var(--second, #1f4fa0); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Pondhaven Show Schedule",
+    "overview": "Duckshire is set like the printed schedule of a village produce show. The Duck is an entrant, Skills are numbered classes, the current Action is the entry on the bench, and every Cycle is judged in public. The page is cool white card stock in green-black ink: reversed ink bands carry headings, ruled tables carry the data, and condensed grotesque capitals label everything. Numbers are tabular and trustworthy. The frame is sober and competent; the jokes live in content (item notes, Action flavour text), never in chrome.\n\nDensity is the default. Three columns on desktop (Skills, the entry, Inventory) put the running Action, its rates, and the haul in one glance; on phones the same sheet stacks with the entry first. Hierarchy comes from weight, case, width, and reversal rather than from many type sizes, and colour is held back for state: four prize-card colours, each meaning exactly one thing.\n\nThe world is light-only for now (`color-scheme: light`); there is no dark theme yet. Surfaces are flat printed paper with square corners. It rejects the slate-sidebar-and-cards idle-game arrangement and the cosy cream pond-game look.",
+    "keyCharacteristics": [
+      "Green-black ink on cool card stock; ink is the only structural colour.",
+      "Reversed ink bands as section headings; hairline-ruled tables with head rows and an ink end rule.",
+      "Two families: Archivo (with its width axis) for everything read, Zilla Slab for names and headline figures.",
+      "Prize-card colours are state, never decoration.",
+      "Square corners everywhere; no cards inside cards.",
+      "One signature motion: the newest Recent Cycles row is stamped in."
+    ],
+    "rules": [
+      { "name": "The Prize-Card Rule", "body": "Red, blue, green, and yellow mean live, experience, gains, and Feathers. Nothing else gets them. Quantities otherwise sit in ink: per-Cycle and per-hour rates, older Recent Cycles rows, and Inventory quantities are all ink.", "section": "colors" },
+      { "name": "The Fresh-Stamp Rule", "body": "Gain colour belongs to what has just happened. Only the newest Recent Cycles row and the return-summary haul show green and blue gains; once a row is no longer newest, it returns to ink.", "section": "colors" },
+      { "name": "The Ink Focus Rule", "body": "Focus rings are ink (2px solid, 2px offset), never a prize colour. Rows inside tables draw the ring inset (-2px offset) so it stays inside the rules. The name input thickens its underline instead.", "section": "colors" },
+      { "name": "The One-Register Rule", "body": "Archivo runs at one size (0.9375rem). Rank inside it by weight (400/700/800), case, width, and reversal into an ink band, not by stepping the size.", "section": "typography" },
+      { "name": "The Tabular Rule", "body": "Every quantity, time, and count is set with tabular figures (`tnum`) so columns align and ticking values do not jitter. Zilla Slab numerals are lining (`lnum`); its default old-style figures are not used for numbers.", "section": "typography" },
+      { "name": "The Printed-Paper Rule", "body": "Nothing on the board casts a shadow. Separation is a rule, a band, or a tone, never elevation.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** open every panel and sheet with a reversed ink heading band.",
+      "**Do** set every quantity, time, and count in tabular figures, and Zilla Slab numerals as lining figures.",
+      "**Do** give tables a pencilled head row, hairline row rules, and an ink end rule.",
+      "**Do** keep Archivo at the one text size (0.9375rem) and rank by weight, case, width (75%), and reversal.",
+      "**Do** keep tappable rows and buttons at least 48px tall, with any hover treatment gated behind `(hover: hover)`.",
+      "**Do** use CONTEXT.md terms in UI copy (Skills, Inventory, Cycle, Action), not show vocabulary."
+    ],
+    "donts": [
+      "**Don't** colour a quantity unless it is live (red), experience as the subject (blue), a fresh gain (green), or Feathers (yellow).",
+      "**Don't** use a prize colour for focus rings, borders, or decoration; focus is ink.",
+      "**Don't** round corners or set a card inside a card; boxed marks such as class numbers and state stamps are the exception because they are type, not sheets.",
+      "**Don't** add shadows to anything on the board; the results slip is the only lifted sheet.",
+      "**Don't** add a dark theme by inverting tokens; the world is light-only until one is designed.",
+      "**Don't** add rosettes, bunting, or other show decoration; the show lives in the typesetting."
+    ]
+  }
+}

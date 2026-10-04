@@ -1,5 +1,12 @@
 import { createHash, randomUUID } from "node:crypto";
-import { advanceGame, type ActionId, type Content, type GameState } from "@/engine/engine";
+import {
+  advanceGame,
+  applyOfflineProgress,
+  type ActionId,
+  type Content,
+  type GameState,
+  type OfflineProgressSummary,
+} from "@/engine/engine";
 import type { DuckSave, DuckStore } from "./duck-store";
 import { MAX_NAME_LENGTH } from "./save-limits";
 
@@ -25,8 +32,10 @@ export function createSaveApi({ store, content, startingActionId, now }: SaveApi
     return save ? { tokenHash, save } : null;
   };
 
-  const respond =(save: DuckSave, init?: ResponseInit) =>
-    Response.json({ ...save, serverNow: now() }, init);
+  const respond = (
+    save: DuckSave & { offlineProgress?: OfflineProgressSummary | null },
+    init?: ResponseInit,
+  ) => Response.json({ ...save, serverNow: now() }, init);
 
   return {
     async createDuck(request: Request): Promise<Response> {
@@ -55,10 +64,14 @@ export function createSaveApi({ store, content, startingActionId, now }: SaveApi
       );
     },
 
+    /** Loads a returning Duck, applying and persisting its Offline Progress. */
     async getDuck(request: Request): Promise<Response> {
       const found = findSave(request);
       if (!found) return noDuck();
-      return respond(found.save);
+
+      const { state, summary } = applyOfflineProgress(found.save.state, content, now());
+      store.update(found.tokenHash, state);
+      return respond({ ...found.save, state, offlineProgress: summary });
     },
 
     /** Runs the Game Engine up to now on the server and persists the result. */
